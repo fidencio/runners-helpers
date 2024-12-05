@@ -105,7 +105,7 @@ function _remove_proxy_snippet()
 	local snippet_file="${1}/proxy.conf"
 	if [ -f "${snippet_file}" ]; then
 		_info "_remove_proxy_snippet: removing the proxy.conf snippet from ${snippet_path}"
-		rm -f "${snippet_file}"
+		sudo rm -f "${snippet_file}"
 	fi
 
 	sudo systemctl daemon-reload
