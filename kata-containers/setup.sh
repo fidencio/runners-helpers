@@ -113,7 +113,7 @@ function _remove_proxy_snippet()
 function _install_containerd()
 {
 	_info ""
-	_info "_install_containerd | installing containerd: ${CONTAINERD_VERSION} ..."
+	_info "_install_containerd | installing containerd from the distro ..."
 
 	# from /etc/os-release
 	case ${NAME} in
