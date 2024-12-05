@@ -18,7 +18,6 @@ readonly script_name=${0##*/}
 
 script_called_time="$(date)"
 
-CONTAINERD_VERSION="${CONTAINERD_VERSION:-latest}"
 HTTPS_PROXY="${HTTPS_PROXY:-${https_proxy:-}}"
 HTTP_PROXY="${HTTP_PROXY:-${http_proxy:-}}"
 NO_PROXY="${NO_PROXY:-${no_proxy:-}}"
@@ -120,37 +119,15 @@ function _install_containerd()
 	case ${NAME} in
 		Ubuntu)
 			sudo apt update
-			sudo apt -y install runc
+			sudo apt -y install containerd.io
 			;;
 		CentOS\ Stream)
-			sudo dnf -y install runc
+			sudo dnf -y install containerd.io
 			;;
 	esac
 
-	local containerd_version="${CONTAINERD_VERSION}"
-	if [ "${containerd_version}" = "latest" ]; then
-		containerd_version=$(curl --silent https://api.github.com/repos/containerd/containerd/releases | jq -r .[].tag_name | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$" | sort -r | head -1)
-	fi
-
-	if ! echo "${containerd_version}" | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$"; then
-		_warn "_install_containerd | Something went wrong when getting the containerd version"
-		_warn "_install_containerd | You can manually check on your side by running the following command: "
-		if [ "${CONTAINERD_VERSION}" == "latest" ]; then
-			_warn "CONTAINERD_VERSION=\$(curl --silent https://api.github.com/repos/containerd/containerd/releases | jq -r .[].tag_name | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$" | sort -r | head -1)"
-		fi
-		_warn "echo \${CONTAINERD_VERSION} | grep -E \"^v[0-9]+\.[0-9]+\.[0-9]+$\""
-		_die "_install_containerd | containerd_version does not follow the expected format (\"^v[0-9]+\.[0-9]+\.[0-9]+$\")"
-	fi
-
-	wget https://github.com/containerd/containerd/releases/download/${containerd_version}/containerd-${containerd_version#v}-linux-amd64.tar.gz
-	sudo tar xvzpf containerd-${containerd_version#v}-linux-amd64.tar.gz -C /usr/local/
-	rm -f containerd-${containerd_version#v}-linux-amd64.tar.gz 
-
 	sudo mkdir -p /etc/containerd
-	containerd config default | sudo tee /etc/containerd/config.toml
-	pushd /etc/systemd/system
-		sudo -E wget https://raw.githubusercontent.com/containerd/containerd/refs/heads/main/containerd.service
-	popd
+	containerd config default | sed "s/SystemdCgroup = false/SystemdCgroup = true/" | sudo tee /etc/containerd/config.toml
 	_drop_in_proxy_snippet "/etc/systemd/system/containerd.service.d"
 
 	sudo tee /etc/modules-load.d/containerd.conf <<EOF
@@ -168,15 +145,20 @@ EOF
 
 function _uninstall_containerd()
 {
+	# from /etc/os-release
+	case ${NAME} in
+		Ubuntu)
+			sudo apt update
+			sudo apt -y remove containerd.io
+			;;
+		CentOS\ Stream)
+			sudo dnf -y remove containerd.io
+			;;
+	esac
+
 	sudo rm -f /etc/modules-load.d/containerd.conf
 	_remove_proxy_snippet "/etc/systemd/system/containerd.service.d"
-	sudo rm -f /etc/systemd/system/containerd.service
-	sudo rm -f /usr/local/bin/containerd
-	sudo rm -f /usr/local/bin/containerd-shim-runc-v2
-	sudo rm -f /usr/local/bin/containerd-stress
-	sudo rm -f /usr/local/bin/ctr
 	sudo rm -rf /var/lib/containerd*
-	sudo rm -rf /opt/containerd
 }
 
 function _install_k8s()
