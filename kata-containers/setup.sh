@@ -119,7 +119,7 @@ function _install_containerd()
 	case ${NAME} in
 		Ubuntu)
 			sudo apt update
-			sudo apt -y install containerd.io
+			sudo apt -y install containerd
 			;;
 		CentOS\ Stream)
 			sudo dnf -y install containerd.io
