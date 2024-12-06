@@ -23,22 +23,22 @@ HTTP_PROXY="${HTTP_PROXY:-${http_proxy:-}}"
 NO_PROXY="${NO_PROXY:-${no_proxy:-}}"
 
 function _die() {
-    local msg="$*"
+	local msg="$*"
 	echo >&2 "ERROR: ${msg}"
 
-    exit 1
+	exit 1
 }
 
 function _warn()
 {
-    local msg="$*"
-    echo "WARNING: ${msg}"
+	local msg="$*"
+	echo "WARNING: ${msg}"
 }
 
 function _info()
 {
-    local msg="$*"
-    echo "INFO: ${msg}"
+	local msg="$*"
+	echo "INFO: ${msg}"
 }
 
 function _usage()
@@ -251,10 +251,10 @@ function _reset_k8s()
 	_info ""
 	_info "_reset_k8s | resetting k8s ..."
 
-   sudo kubeadm reset -f	
-   rm -rf ${HOME}/.kube
+	sudo kubeadm reset -f	
+	rm -rf ${HOME}/.kube
 
-   _info "_reset_k8s | k8s reset"
+	_info "_reset_k8s | k8s reset"
 }
 
 function _deploy_nydus()
