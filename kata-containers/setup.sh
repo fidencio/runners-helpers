@@ -316,8 +316,20 @@ function _main()
 	[ -z "${@}" ] && _usage 1
 
 	case "${1}" in
-		install) _install_containerd && _install_k8s && _setup_k8s && _deploy_nydus ;;
-		uninstall) _stop_all_services && _undeploy_nydus && _reset_k8s && _uninstall_k8s && _uninstall_containerd && _ask_user_to_reboot ;;
+		install)
+			_install_containerd
+			_install_k8s
+			_setup_k8s
+			_deploy_nydus
+			;;
+		uninstall)
+			_stop_all_services
+			_undeploy_nydus
+		       	_reset_k8s
+			_uninstall_k8s
+			_uninstall_containerd
+			_ask_user_to_reboot
+			;;
 		*)
 			_warn "option \"${1}\" is not valid"
 			_usage 1
