@@ -149,7 +149,7 @@ function _uninstall_containerd()
 	case ${NAME} in
 		Ubuntu)
 			sudo apt update
-			sudo apt -y remove containerd.io
+			sudo apt -y remove containerd
 			;;
 		CentOS\ Stream)
 			sudo dnf -y remove containerd.io
