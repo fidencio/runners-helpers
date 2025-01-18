@@ -325,7 +325,7 @@ function _main()
 		uninstall)
 			_stop_all_services
 			_undeploy_nydus
-		       	_reset_k8s
+			_reset_k8s
 			_uninstall_k8s
 			_uninstall_containerd
 			_ask_user_to_reboot
