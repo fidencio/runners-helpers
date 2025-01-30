@@ -306,6 +306,7 @@ function _main()
 			;;
 		centos)
 			sudo setenforce 0
+			sudo sed -i -e "s/SELINUX=enforcing/SELINUX=permissive/" /etc/selinux/config
 			sudo dnf -y install wget git fuse
 			;;
 		*)
