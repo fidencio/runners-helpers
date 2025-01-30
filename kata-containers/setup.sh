@@ -183,7 +183,7 @@ EOF
 			sudo apt-mark hold kubeadm kubelet kubectl
 			;;
 		centos)
-			sudo systemctl disable --now firewalld
+			sudo systemctl disable --now firewalld || true
 			sudo tee /etc/yum.repos.d/kubernetes.repo << EOF
 [kubernetes]
 name=Kubernetes
