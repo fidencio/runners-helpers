@@ -149,7 +149,6 @@ function _uninstall_containerd()
 	# from /etc/os-release
 	case ${NAME} in
 		Ubuntu)
-			sudo apt update
 			sudo apt -y remove containerd
 			;;
 		CentOS\ Stream)
