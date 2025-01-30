@@ -279,7 +279,7 @@ function _undeploy_nydus()
 	rm -rf /tmp/kata-containers
 	git clone https://github.com/kata-containers/kata-containers /tmp/kata-containers
 	pushd /tmp/kata-containers/tests/integration/kubernetes
-		K8S="vanilla" KATA_RUNTIME="qemu" CONTAINER_RUNTIME="containerd" SNAPSHOTTER="nydus" PULL_TYPE="guest-pull" ./gha-run.sh delete-snapshotter
+		K8S="vanilla" KATA_RUNTIME="qemu" CONTAINER_RUNTIME="containerd" SNAPSHOTTER="nydus" PULL_TYPE="guest-pull" ./gha-run.sh cleanup-snapshotter
 	popd
 
 	_info "_undeploy_nydus | nydus undeplayed"
