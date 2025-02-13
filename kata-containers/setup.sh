@@ -21,6 +21,7 @@ script_called_time="$(date)"
 HTTPS_PROXY="${HTTPS_PROXY:-${https_proxy:-}}"
 HTTP_PROXY="${HTTP_PROXY:-${http_proxy:-}}"
 NO_PROXY="${NO_PROXY:-${no_proxy:-}}"
+SKIP_NYDUS="${SKIP_NYDUS:-${skip_nydus:-}}"
 
 function _die() {
 	local msg="$*"
@@ -260,6 +261,11 @@ function _reset_k8s()
 
 function _deploy_nydus()
 {
+	if [ -n "${SKIP_NYDUS}" ]; then
+		_info "Skipping nydus snapshotter deployment"
+		return 0
+	fi
+
 	_info ""
 	_info "_deploy_nydus | deploying nydus snapshotter ..."
 
@@ -274,6 +280,11 @@ function _deploy_nydus()
 
 function _undeploy_nydus()
 {
+	if [ -n "${SKIP_NYDUS}" ]; then
+		_info "Skipping nydus snapshotter undeployment"
+		return 0
+	fi
+
 	_info ""
 	_info "_undeploy_nydus | undeploying nydus snapshotter ..."
 
