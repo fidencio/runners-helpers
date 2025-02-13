@@ -233,6 +233,7 @@ function _setup_k8s()
 {
 	_info ""
 	_info "_setup_k8s | setting up k8s ..."
+	sudo swapoff -a && sudo sed -i '/ swap / s/^/#/' /etc/fstab
 	sudo systemctl enable --now kubelet
 	sudo -E kubeadm config images pull
 	sudo -E kubeadm init --pod-network-cidr=10.244.0.0/16
@@ -251,7 +252,7 @@ function _reset_k8s()
 	_info ""
 	_info "_reset_k8s | resetting k8s ..."
 
-	sudo kubeadm reset -f	
+	sudo kubeadm reset -f
 	rm -rf ${HOME}/.kube
 
 	_info "_reset_k8s | k8s reset"
